@@ -1,10 +1,15 @@
 import { useState } from "react";
+import { useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
 const Login = () =>{
     const [form, setForm] = useState({
         email: "",
         password: "",
       });
+      const navigate = useNavigate();
+      const location = useLocation();
+      const from = location.state?.from?.pathname || "/"
+
     const handleChange = (e: any)=>{
         setForm({...form, [e.target.name]:e.target.value});
     } 
@@ -15,7 +20,7 @@ const Login = () =>{
             localStorage.setItem("token", res.data.token);
             console.log(res.data);
             
-            alert("login Successfull!")
+            navigate(from, { replace: true }); // 👈 redirect back
         } catch (err:any) {
             alert(err.response?.data?.message || "Error");
         }
