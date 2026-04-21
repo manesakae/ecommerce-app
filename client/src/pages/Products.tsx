@@ -6,6 +6,7 @@ import { fetchProducts } from "../services/productService";
 const Products = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Products = () => {
       setLoading(true);
       const data = await fetchProducts({ page, limit: 6, category });
       setProducts(data.products);
+      setTotalPages(data.pages);
     } finally {
       setLoading(false);
     }
@@ -54,14 +56,22 @@ const Products = () => {
 
       <div className="flex gap-2 mt-4">
         <button
-          className="bg-gray-200 px-3"
+          className={`px-3 ${
+            page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-200"
+          }`}
+          disabled={page === 1}
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
         >
           Prev
         </button>
 
         <button
-          className="bg-gray-200 px-3"
+          className={`px-3 ${
+            page === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-gray-200"
+          }`}
+          disabled={page === totalPages}
           onClick={() => setPage((p) => p + 1)}
         >
           Next

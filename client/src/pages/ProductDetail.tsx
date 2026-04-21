@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useCart } from "../context/CartContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const { addToCart } = useCart();
 
   const fetchProduct = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `http://localhost:5001/api/products/${id}`
-      );
+      const res = await axios.get(`http://localhost:5001/api/products/${id}`);
       setProduct(res.data);
     } finally {
       setLoading(false);
@@ -39,11 +39,19 @@ const ProductDetails = () => {
 
       <p className="text-gray-600 mb-4">{product.description}</p>
 
-      <p className="text-sm text-gray-500">
-        Category: {product.category}
-      </p>
+      <p className="text-sm text-gray-500">Category: {product.category}</p>
 
-      <button className="bg-black text-white px-4 py-2 mt-4">
+      <button
+        className="bg-black text-white px-4 py-2 mt-4"
+        onClick={() =>
+          addToCart({
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+          })
+        }
+      >
         Add to Cart
       </button>
     </div>

@@ -8,6 +8,7 @@ import ProductDetail from "./pages/ProductDetail";
 import NavBar from "./components/NavBar";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -20,19 +21,23 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Route>
 
-        {/* Private Routes */}
-        <Route element={<PrivateRoute role="admin"/>}>
+        {/* Private Routes Admin only*/}
+        <Route element={<PrivateRoute roles={["admin"]} />}>
           <Route
             path="/admin/create-product"
             element={<AdminCreateProduct />}
           />
         </Route>
 
+        {/* Private Routes admin + user */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/cart" element={<Cart />} />
+        </Route>
+
         {/* Common routes */}
         <Route path="/" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
-
       </Routes>
     </>
   );
