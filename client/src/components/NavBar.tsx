@@ -1,14 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { syncCart } from "../services/cartService";
 import { getUserFromToken } from "../utils/auth";
+
 
 const NavBar = () => {
   const navigate = useNavigate();
   const user = getUserFromToken();
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await syncCart(cart);
     localStorage.removeItem("token");
+    clearCart();
     navigate("/login");
   };
 
@@ -39,6 +43,7 @@ const NavBar = () => {
       <div className="flex items-center gap-4">
         {!user ? (
           <>
+            <Link to="/cart">Cart ({cart.length})</Link>
             <Link
               to="/login"
               className="px-3 py-1 border rounded hover:bg-gray-100"

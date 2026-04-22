@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate, useLocation} from "react-router-dom";
 import axios from "axios";
-const Login = () =>{
+import { useCart } from "../context/CartContext";
+const Login = () => {
     const [form, setForm] = useState({
         email: "",
         password: "",
       });
       const navigate = useNavigate();
       const location = useLocation();
+      const { syncCartWithBackend } = useCart();
+ 
       const from = location.state?.from?.pathname || "/"
 
     const handleChange = (e: any)=>{
@@ -19,7 +22,7 @@ const Login = () =>{
             const res = await axios.post("http://localhost:5001/api/auth/login", form)
             localStorage.setItem("token", res.data.token);
             console.log(res.data);
-            
+            await syncCartWithBackend();
             navigate(from, { replace: true }); // 👈 redirect back
         } catch (err:any) {
             alert(err.response?.data?.message || "Error");

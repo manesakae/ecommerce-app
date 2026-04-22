@@ -11,7 +11,6 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-
   const loadProducts = async () => {
     try {
       setLoading(true);
@@ -23,30 +22,46 @@ const Products = () => {
     }
   };
 
+  const filterByCategory = (e: any) => {
+    setPage(1);
+    setCategory(e.target.value);
+  }
+
   useEffect(() => {
     loadProducts();
   }, [page, category]);
 
   return (
     <div className="p-6">
+       {/* Header */}
       <h1 className="text-2xl font-bold mb-4">Products</h1>
+
+      {/* Filter */}
       <select
         className="border p-2 mb-4"
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e) => filterByCategory(e)}
       >
         <option value="">All</option>
         <option value="stationary">Stationary</option>
         <option value="other">Other</option>
       </select>
 
+      {/* Empty State */}
       {!loading && products.length === 0 && (
         <p className="text-center mt-4 text-gray-500">No products found</p>
       )}
+
+      {/* Grid */}
       <div className="grid grid-cols-3 gap-4">
         {loading
           ? Array.from({ length: 6 }).map((_, i) => <ProductSkeleton key={i} />)
           : products.map((p) => (
-            <div key={p._id} className="border p-4 rounded cursor-pointer" on onClick={()=> navigate(`/product/${p._id}`)}>
+              <div
+                key={p._id}
+                className="border p-4 rounded cursor-pointer"
+                on
+                onClick={() => navigate(`/product/${p._id}`)}
+              >
                 <h2 className="font-bold">{p.name}</h2>
                 <p>${p.price}</p>
                 <p className="text-sm text-gray-500">{p.category}</p>
@@ -54,29 +69,30 @@ const Products = () => {
             ))}
       </div>
 
-      <div className="flex gap-2 mt-4">
-        <button
-          className={`px-3 ${
-            page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-200"
-          }`}
-          disabled={page === 1}
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-        >
-          Prev
-        </button>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-3 mt-8">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+            className="px-4 py-2 rounded-md bg-gray-200 disabled:opacity-50"
+          >
+            Prev
+          </button>
 
-        <button
-          className={`px-3 ${
-            page === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200"
-          }`}
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-        >
-          Next
-        </button>
-      </div>
+          <span className="text-sm text-gray-600">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+            className="px-4 py-2 rounded-md bg-gray-200 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

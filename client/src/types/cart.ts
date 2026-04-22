@@ -1,5 +1,5 @@
 export type CartItem = {
-    _id: string;
+    productId: string;
     name: string;
     price: number;
     quantity: number
@@ -8,5 +8,8 @@ export type CartItem = {
 export type CartContextType = {
     cart: CartItem[];
     addToCart: (item: CartItem) => void;
-    removeFromCart: (id: string) => void;
+    removeFromCart: (productId: string) => void;
+    syncCartWithBackend: () => void;
+    clearCart: () => void;
+    updateQuantity: (productId: string, delta: number) => void;
 }

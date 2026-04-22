@@ -29,14 +29,10 @@ function App() {
           />
         </Route>
 
-        {/* Private Routes admin + user */}
-        <Route element={<PrivateRoute />}>
-          <Route path="/cart" element={<Cart />} />
-        </Route>
-
         {/* Common routes */}
         <Route path="/" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
